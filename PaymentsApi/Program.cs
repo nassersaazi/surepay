@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PaymentsApi.Data;
+using Serilog;
 
 namespace PaymentsApi
 {
@@ -8,6 +9,15 @@ namespace PaymentsApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Use Serilog for logging
+            var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
 
             // Add services to the container.
             builder.Services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase("PaymentsDb"));

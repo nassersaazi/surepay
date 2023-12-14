@@ -13,10 +13,12 @@ namespace PaymentsApi.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly ApiContext _context;
+        private readonly ILogger<PaymentsController> _logger;
 
-        public PaymentsController(ApiContext context)
+        public PaymentsController(ApiContext context, ILogger<PaymentsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         
@@ -24,6 +26,7 @@ namespace PaymentsApi.Controllers
         [HttpPost]
         public IActionResult MakePayment(Transaction transaction)
         {
+            _logger.LogInformation("Make payment request!");
             if (!IsRequestAuthenticated())
             {
                 return Unauthorized();
